@@ -45,7 +45,10 @@ func (t *MyProto) Read() error {
 		var packageLen uint64 = 0
 		err = binary.Read(bytes.NewReader(headerBytes[:8]), binary.BigEndian, &packageLen)
 		if err != nil {
-			return errors.New(fmt.Sprintf("Read packageLen err: %s", err))
+			return errors.New(fmt.Sprintf("Parse packageLen err: %s", err))
+		}
+		if packageLen > 1024*1024*10 {
+			return errors.New(fmt.Sprintf("Parse the packageLen out max(10MiB): %d", packageLen))
 		}
 		t.logger.Printf("Parsed the Message len %d", packageLen)
 
